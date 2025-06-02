@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KI Reiseplaner | AlltagsBuddy</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #ffffff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo img {
+      height: 60px;
+    }
+    .logo span {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1BC7C2;
+    }
+    .cta-button {
+      background-color: #FF6B00;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+      color: #FF6B00;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+    textarea, button, input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .kategorie-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .kategorie-buttons button {
+      flex: 1 0 22%;
+      min-width: 80px;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .kategorie-buttons button.active {
+      background-color: #FF6B00;
+      color: white;
+      border-color: #FF6B00;
+    }
+    button {
+      background-color: #FF6B00;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .output {
+      margin-top: 30px;
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .link-hinweis {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9rem;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      background-color: #1BC7C2;
+      color: white;
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+    .header-inner h1 {
+      flex-grow: 1;
+      text-align: center;
+      margin: 0;
+      font-size: 1.8rem;
+      color: #FF6B00;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <img src="logo.png" alt="AlltagsBuddy Logo" />
+        <span>AlltagsBuddy</span>
+      </div>
+      <h1>KI Reiseplaner</h1>
+      <a href="index.html" class="cta-button">Zurück zur Startseite</a>
+    </div>
+  </header>
+
+  <main>
+    <h2>Individuelle Urlaubsplanung mit KI</h2>
+    <p style="text-align:center">
+      Füge deine Eckdaten (Reiseziel, Datum, Personenanzahl, Budget, Vorlieben etc.) ein – unsere KI erstellt dir automatisch eine passende Reiseempfehlung.
+    </p>
+
+    <form id="generatorForm">
+      <label for="userInput">Deine Reisebeschreibung</label>
+      <textarea id="userInput" rows="14" placeholder="Beispiel: Ich möchte im August für 10 Tage mit dem Auto verreisen, max. 1500 € Budget, am liebsten ans Meer, aber auch wandern. Abfahrt aus Süddeutschland."></textarea>
+
+      <label>Kategorie wählen (mehrfach möglich)</label>
+      <div class="kategorie-buttons" id="stilButtons">
+        <button type="button" data-value="strand">🏖️ Strand</button>
+        <button type="button" data-value="stadt">🏙️ Stadt</button>
+        <button type="button" data-value="aktiv">🥾 Aktiv</button>
+        <button type="button" data-value="abenteuer">🧗 Abenteuer</button>
+        <button type="button" data-value="kultur">🏛️ Kultur</button>
+        <button type="button" data-value="wellness">💆 Wellness</button>
+        <button type="button" data-value="familie">👨‍👩‍👧 Familie</button>
+        <button type="button" data-value="luxus">💎 Luxus</button>
+        <button type="button" data-value="natur">🌲 Natur</button>
+        <button type="button" data-value="kulinarik">🍝 Kulinarik</button>
+        <button type="button" data-value="romantik">❤️ Romantik</button>
+        <button type="button" data-value="geschichte">📜 Geschichte</button>
+        <button type="button" data-value="sport">⚽ Sport</button>
+      </div>
+
+      <input type="hidden" id="stil" value="">
+
+      <button id="generateBtn" type="submit">Jetzt Urlaub generieren</button>
+    </form>
+
+    <div id="status"></div>
+    <div id="output" class="output"></div>
+
+    <div id="export-buttons" style="display:none">
+      <button id="downloadPdfBtn">📄 PDF herunterladen</button>
+      <button id="downloadDocxBtn">📝 Word herunterladen</button>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 AlltagsBuddy – Dein smarter KI-Buddy
+  </footer>
+
+  <script>
+    const form = document.getElementById('generatorForm');
+    const output = document.getElementById('output');
+    const status = document.getElementById('status');
+    const exportBox = document.getElementById('export-buttons');
+    const stilInput = document.getElementById('stil');
+    const stilButtons = document.querySelectorAll('#stilButtons button');
+
+    stilButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        button.classList.toggle('active');
+        const activeValues = Array.from(stilButtons)
+          .filter(btn => btn.classList.contains('active'))
+          .map(btn => btn.dataset.value);
+        stilInput.value = activeValues.join(',');
+      });
+    });
+
+    const generateBtn = document.getElementById('generateBtn');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+    const downloadDocxBtn = document.getElementById('downloadDocxBtn');
+
+    let result = { reiseplan: '' };
+
+    function setStatus(msg, color = '#333') {
+      status.innerText = msg;
+      status.style.color = color;
+    }
+
+    function disableAll(disabled) {
+      generateBtn.disabled = disabled;
+      downloadPdfBtn.disabled = disabled;
+      downloadDocxBtn.disabled = disabled;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const inputText = document.getElementById('userInput').value.trim();
+      if (!inputText) {
+        setStatus("⚠️ Bitte gib eine Reisebeschreibung ein.", "red");
+        return;
+      }
+
+      setStatus('⏳ Reise wird generiert...');
+      disableAll(true);
+
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          inhalt: inputText,
+          stil: stilInput.value
+        })
+      });
+
+      const data = await res.json();
+      if (data.error) {
+        setStatus('❌ Fehler: ' + data.error, 'red');
+        disableAll(false);
+        return;
+      }
+
+      if (!data.reiseplan || data.reiseplan.trim().length < 5) {
+        setStatus('⚠️ Es wurde kein brauchbarer Reiseplan erstellt.', 'red');
+        disableAll(false);
+        return;
+      }
+
+      result = data;
+      output.innerHTML = `<h3>Vorgeschlagene Reise:</h3><p>${data.reiseplan.replace(/\n/g, '<br>')}</p>`;
+      setStatus('✅ Reise erfolgreich erstellt!', 'green');
+      exportBox.style.display = 'block';
+      disableAll(false);
+    });
+
+    downloadPdfBtn.addEventListener('click', async () => {
+      setStatus('📄 PDF wird erstellt...');
+      disableAll(true);
+      const res = await fetch('/api/export/pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(result)
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reiseplan.pdf';
+      a.click();
+      setStatus('✅ PDF wurde heruntergeladen', 'green');
+      disableAll(false);
+    });
+
+    downloadDocxBtn.addEventListener('click', async () => {
+      setStatus('📝 Word wird erstellt...');
+      disableAll(true);
+      const res = await fetch('/api/export/docx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(result)
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reiseplan.docx';
+      a.click();
+      setStatus('✅ Word-Datei wurde heruntergeladen', 'green');
+      disableAll(false);
+    });
+  </script>
+</body>
+</html>
