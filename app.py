@@ -42,30 +42,40 @@ def generate():
             return jsonify({'error': 'Keine Inhalte übergeben'}), 400
 
         prompt = f"""
-Du bist ein smarter Reiseassistent. Der Nutzer plant eine Reise im Stil: {stil}.
+Du bist ein smarter, professioneller Reiseassistent. Der Nutzer plant eine Reise im Stil: {stil}.
 
-Erstelle basierend auf den Angaben:
-- ein konkretes Reiseziel inkl. Kurzbeschreibung
-- 3–5 passende Aktivitäten
-- optimaler Reisezeitraum
-- realistisches Gesamtbudget (Hin- und Rückreise + Unterkunft + Aktivitäten)
-- sinnvolle Reiseroute inkl. Hinweise zu Mautpflicht
+Analysiere die Angaben des Nutzers sorgfältig und erstelle basierend darauf einen umfassenden, realistischen und alltagstauglichen Reiseplan.
+
+Inhalt des Plans:
+
+1. **Zielregion & Kurzbeschreibung**  
+   Gib ein konkretes Reiseziel an, das zu den Angaben passt, inkl. kurzer Beschreibung der Region und Besonderheiten.
+
+2. **Aktivitäten & Highlights**  
+   Liste 3–5 passende Aktivitäten oder Sehenswürdigkeiten auf, die zum Stil und Reiseziel passen.
+
+3. **Empfohlener Reisezeitraum**  
+   Gib den optimalen Zeitraum (Monate, Wetterlage, Touristenaufkommen) an.
+
+4. **Reisebudget (realistisch)**  
+   Schätze die Gesamtkosten (Hin- & Rückreise, Unterkunft, Verpflegung, Aktivitäten, ggf. Maut und Eintritte). Gib auch an, was ggf. nicht im Budget enthalten ist.
+
+5. **Detaillierte Reiseroute**  
+   Gib eine logische, mehrtägige Route an (mit Zwischenstopps) inkl. sinnvoller Reihenfolge der Orte. Berücksichtige Mautpflicht, Fahrzeiten und Highlights entlang der Strecke.
+
+6. **Tagesablauf (Beispiel)**  
+   Erstelle beispielhaft einen typischen Tagesablauf (z. B. Frühstück – Aktivität – Mittag – Entspannung – Abendprogramm) für 1–2 Reisetage.
+
+7. **Zusätzliche Tipps & Hinweise**  
+   Was sollte man mitnehmen (z. B. Wanderschuhe, Adapter, Mückenspray)? Gibt es Impfempfehlungen, Visumspflicht, Versicherungen oder spezielle kulturelle Gepflogenheiten? Erwähne auch mögliche Extrakosten (Parken, Trinkgeld, Touristensteuer etc.).
+
+8. **Notfall-Infos vor Ort**  
+   Liste wichtige Notfallnummern (z. B. Polizei, Notruf, deutsche Botschaft), gängige Zahlungsmittel und ob Kreditkarten akzeptiert werden.
 
 Angaben des Nutzers:
 {inhalt}
 
-Antworte klar strukturiert in folgendem Format:
-
-Ziel:
-[...]
-Aktivitäten:
-[...]
-Zeitraum:
-[...]
-Budget:
-[...]
-Route:
-[...]
+Antworte im Klartext, gut lesbar, strukturiert mit Zwischenüberschriften. Kein Fließtext, sondern logisch gegliederte Abschnitte wie in einem echten Reiseplan.
 """
 
         response = client.chat.completions.create(
@@ -75,7 +85,7 @@ Route:
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=1500
+            max_tokens=2000
         )
 
         plan = response.choices[0].message.content.strip()
@@ -161,4 +171,3 @@ def export_pdf():
 # === Startserver ===
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
-
