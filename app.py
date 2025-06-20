@@ -14,6 +14,10 @@ from openai import OpenAI
 import os
 import logging
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
 # === Konfiguration ===
 
 load_dotenv()
